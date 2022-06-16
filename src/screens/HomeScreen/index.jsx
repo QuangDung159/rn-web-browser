@@ -2,16 +2,17 @@
 import Constants from 'expo-constants';
 import { useCallback, useState } from 'react';
 import {
-    StyleSheet,
-    TextInput,
+    StyleSheet, TextInput,
     View
 } from 'react-native';
 import WebView from 'react-native-webview';
 
 export default function HomeScreen() {
-    const [url, setUrl] = useState('google.com');
+    const [url, setUrl] = useState('https://google.com');
     const [uri, setUri] = useState(url);
     const [urlDisplay, setUrlDisplay] = useState();
+    const [currentScroll, setCurrentScroll] = useState(0);
+    const [isScrollUp, setIsScrollUp] = useState(true);
 
     const fetchWebsite = () => {
         const validUrl = `https://${url}`;
@@ -22,8 +23,17 @@ export default function HomeScreen() {
     const renderWebView = useCallback(
         () => (
             <WebView
-                style={styles.container}
                 source={{ uri }}
+                pullToRefreshEnabled
+                onScroll={(syntheticEvent) => {
+                    const { contentOffset } = syntheticEvent.nativeEvent;
+                    if (contentOffset.y <= currentScroll) {
+                        setIsScrollUp(true);
+                    } else {
+                        setIsScrollUp(false);
+                    }
+                    setCurrentScroll(contentOffset.y);
+                }}
             />
         ), [uri]
     );
@@ -34,26 +44,29 @@ export default function HomeScreen() {
                 flex: 1
             }}
         >
-            <TextInput
-                style={styles.input}
-                onChangeText={(input) => {
-                    setUrl(input);
-                    setUrlDisplay(input);
-                }}
-                value={urlDisplay}
-                placeholder="Enter URL"
-                onSubmitEditing={() => {
-                    fetchWebsite();
-                }}
-                autoCorrect={false}
-                autoCapitalize="none"
-                onFocus={() => {
-                    let formattedUrl = urlDisplay;
-                    formattedUrl = formattedUrl?.replace('https://', '');
-                    formattedUrl = formattedUrl?.replace('http://', '');
-                    setUrlDisplay(formattedUrl);
-                }}
-            />
+            {isScrollUp && (
+                <TextInput
+                    style={styles.input}
+                    onChangeText={(input) => {
+                        setUrl(input);
+                        setUrlDisplay(input);
+                    }}
+                    value={urlDisplay}
+                    placeholder="Enter URL"
+                    onSubmitEditing={() => {
+                        fetchWebsite();
+                    }}
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    onFocus={() => {
+                        let formattedUrl = urlDisplay;
+                        formattedUrl = formattedUrl?.replace('https://', '');
+                        formattedUrl = formattedUrl?.replace('http://', '');
+                        setUrlDisplay(formattedUrl);
+                    }}
+                />
+            )}
+
             {renderWebView()}
         </View>
     );

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "expo-base-01",
-    "slug": "expo-base-01",
+    "name": "rn-web-browser",
+    "slug": "rn-web-browser",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -24,7 +24,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.quangdunglu159.expobase01"
+      "package": "com.quangdunglu159.rnwebbrowser"
     },
     "web": {
       "favicon": "./assets/favicon.png"
