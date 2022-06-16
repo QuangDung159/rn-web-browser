@@ -1,24 +1,49 @@
 {
-  "name": "rn-web-browser",
-  "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "apk-dev": "expo build:android -t apk --release-channel dev",
+    "apk-uat": "expo build:android -t apk --release-channel uat",
+    "apk-prd": "expo build:android -t apk --release-channel prd",
+    "aab": "expo build:android -t app-bundle --release-channel prd",
+    "ota-dev": "expo publish --release-channel dev",
+    "ota-prd": "expo publish --release-channel prd",
+    "publish-play-store": "sh publish-android-latest.sh"
+  },
+  "engines": {
+    "node": ">=10.6.0"
   },
   "dependencies": {
-    "expo": "~45.0.0",
-    "expo-status-bar": "~1.3.0",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "react-native": "0.68.2",
-    "react-native-web": "0.17.7"
+    "@react-navigation/bottom-tabs": "^6.0.9",
+    "@react-navigation/native": "^6.0.2",
+    "@react-navigation/native-stack": "^6.1.0",
+    "expo": "~42.0.1",
+    "expo-app-loading": "^1.1.2",
+    "expo-asset": "~8.3.3",
+    "expo-font": "~9.2.1",
+    "expo-status-bar": "~1.0.4",
+    "expo-updates": "~0.8.2",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
+    "react-native-dotenv": "^3.2.0",
+    "react-native-screens": "~3.4.0",
+    "react-native-web": "~0.13.12"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@babel/core": "^7.9.0",
+    "babel-eslint": "10.1.0",
+    "babel-preset-expo": "8.3.0",
+    "eslint": "7.15.0",
+    "eslint-config-airbnb": "18.2.1",
+    "eslint-import-resolver-babel-module": "^5.3.1",
+    "eslint-plugin-import": "2.22.1",
+    "eslint-plugin-jsx-a11y": "6.4.1",
+    "eslint-plugin-react": "7.21.5"
   },
   "private": true
 }
