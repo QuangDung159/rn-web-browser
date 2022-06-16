@@ -1,16 +1,15 @@
 /* eslint-disable global-require */
 /* eslint-disable react/style-prop-object */
 import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AppLoading from 'expo-app-loading';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
-import * as Updates from 'expo-updates';
 import React from 'react';
-import {
-    Alert, Image, LogBox
-} from 'react-native';
-import TabNavigator from './src/navigations/TabNavigator';
+import { Image, LogBox } from 'react-native';
+import HomeScreen from './src/screens/HomeScreen';
+import { SCREEN_NAME, SCREEN_TITLE, THEME } from './src/utils/Constants';
 import Images from './src/utils/Images';
 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
@@ -42,23 +41,25 @@ function cacheImages() {
 
 // cache app images
 const assetImages = [Images.Onboarding];
+const { FONTS, SIZES } = THEME;
+
+const StackNavigator = createNativeStackNavigator();
+
+const headerConfig = {
+    headerStyle: {
+        // backgroundColor: 'transparent',
+    },
+    headerTitleStyle: {
+        fontWeight: 'bold',
+        fontFamily: FONTS.TEXT_BOLD,
+        fontSize: SIZES.FONT_H2,
+        elevation: 0,
+    },
+};
 
 export default function App() {
     const [isLoadingComplete, setIsLoadingComplete] = React.useState(false);
     const [fontLoaded, setFontLoaded] = React.useState(false);
-
-    React.useEffect(() => {
-        const fetchUpdateOTA = Updates.addListener(async () => {
-            const otaObj = await Updates.fetchUpdateAsync();
-            if (otaObj.isNew) {
-                Alert.alert('Bạn có bản cập nhật mới', '', [
-                    { text: 'Cập nhật', onPress: () => Updates.reloadAsync() },
-                ]);
-            }
-        });
-
-        return () => fetchUpdateOTA;
-    }, []);
 
     React.useEffect(() => {
         async function loadFont() {
@@ -102,7 +103,16 @@ export default function App() {
         <>
             <StatusBar barStyle="light-content" translucent />
             <NavigationContainer>
-                <TabNavigator />
+                <StackNavigator.Navigator screenOptions={{ headerShown: false }}>
+                    <StackNavigator.Screen
+                        options={{
+                            ...headerConfig,
+                            title: SCREEN_TITLE.HOME,
+                        }}
+                        name={SCREEN_NAME.HOME}
+                        component={HomeScreen}
+                    />
+                </StackNavigator.Navigator>
             </NavigationContainer>
         </>
     );
