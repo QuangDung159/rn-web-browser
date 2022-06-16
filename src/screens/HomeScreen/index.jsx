@@ -10,7 +10,7 @@ import WebView from 'react-native-webview';
 export default function HomeScreen() {
     const [url, setUrl] = useState('https://google.com');
     const [uri, setUri] = useState(url);
-    const [urlDisplay, setUrlDisplay] = useState();
+    const [urlDisplay, setUrlDisplay] = useState('https://google.com');
     const [currentScroll, setCurrentScroll] = useState(0);
     const [isScrollUp, setIsScrollUp] = useState(true);
 
@@ -27,7 +27,7 @@ export default function HomeScreen() {
                 pullToRefreshEnabled
                 onScroll={(syntheticEvent) => {
                     const { contentOffset } = syntheticEvent.nativeEvent;
-                    if (contentOffset.y <= currentScroll) {
+                    if (contentOffset.y <= currentScroll || contentOffset.y <= 0) {
                         setIsScrollUp(true);
                     } else {
                         setIsScrollUp(false);
@@ -35,7 +35,7 @@ export default function HomeScreen() {
                     setCurrentScroll(contentOffset.y);
                 }}
             />
-        ), [uri]
+        ), [uri, currentScroll]
     );
 
     return (
