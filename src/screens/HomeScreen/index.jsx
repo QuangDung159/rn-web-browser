@@ -20,6 +20,13 @@ export default function HomeScreen() {
         setUrlDisplay(validUrl);
     };
 
+    const onFocusInput = () => {
+        let formattedUrl = urlDisplay;
+        formattedUrl = formattedUrl?.replace('https://', '');
+        formattedUrl = formattedUrl?.replace('http://', '');
+        setUrlDisplay(formattedUrl);
+    };
+
     const renderWebView = useCallback(
         () => (
             <WebView
@@ -58,12 +65,7 @@ export default function HomeScreen() {
                     }}
                     autoCorrect={false}
                     autoCapitalize="none"
-                    onFocus={() => {
-                        let formattedUrl = urlDisplay;
-                        formattedUrl = formattedUrl?.replace('https://', '');
-                        formattedUrl = formattedUrl?.replace('http://', '');
-                        setUrlDisplay(formattedUrl);
-                    }}
+                    onFocus={() => onFocusInput()}
                 />
             )}
 
