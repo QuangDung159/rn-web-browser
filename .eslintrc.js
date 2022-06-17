@@ -24,7 +24,7 @@ module.exports = {
         'react/forbid-prop-types': 'off',
         'no-console': 'off',
         'max-len': ['error', {
-            code: 120
+            code: 200
         }],
         'no-unused-expressions': 'off',
         'consistent-return': 'off',

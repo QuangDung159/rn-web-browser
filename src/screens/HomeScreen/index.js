@@ -1,10 +1,15 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { useCallback, useState } from 'react';
+import Constants from 'expo-constants';
 import {
-    SafeAreaView,
-    StyleSheet, TextInput, View
+    useCallback, useEffect, useRef, useState
+} from 'react';
+import {
+    Animated, Dimensions, SafeAreaView, TextInput
 } from 'react-native';
 import WebView from 'react-native-webview';
+
+const { statusBarHeight } = Constants;
+const { width } = Dimensions.get('window');
 
 export default function HomeScreen() {
     const [url, setUrl] = useState('https://google.com');
@@ -12,6 +17,49 @@ export default function HomeScreen() {
     const [urlDisplay, setUrlDisplay] = useState('https://google.com');
     const [currentScroll, setCurrentScroll] = useState(0);
     const [isScrollUp, setIsScrollUp] = useState(true);
+
+    const scrollAnim = useRef(new Animated.Value(0)).current;
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(
+        () => {
+            if (isScrollUp) {
+                scrollDown();
+                fadeIn();
+            } else {
+                scrollUp();
+                fadeOut();
+            }
+        }, [isScrollUp]
+    );
+
+    const scrollUp = () => {
+        Animated.timing(scrollAnim, {
+            toValue: -(40 + statusBarHeight),
+            duration: 100
+        }).start();
+    };
+
+    const scrollDown = () => {
+        Animated.timing(scrollAnim, {
+            toValue: 0,
+            duration: 100
+        }).start();
+    };
+
+    const fadeIn = () => {
+        Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 250
+        }).start();
+    };
+
+    const fadeOut = () => {
+        Animated.timing(fadeAnim, {
+            toValue: 0,
+            duration: 50
+        }).start();
+    };
 
     const fetchWebsite = () => {
         const validUrl = `https://${url}`;
@@ -29,6 +77,11 @@ export default function HomeScreen() {
     const renderWebView = useCallback(
         () => (
             <WebView
+                style={[
+                    isScrollUp && {
+                        marginTop: 40
+                    }
+                ]}
                 source={{ uri }}
                 pullToRefreshEnabled
                 onScroll={(syntheticEvent) => {
@@ -51,49 +104,47 @@ export default function HomeScreen() {
     return (
         <SafeAreaView
             style={{
-                flex: 1
+                flex: 1,
+                backgroundColor: '#fff'
             }}
         >
-            {isScrollUp && (
-                <View
+            <Animated.View
+                style={[
+                    {
+                        transform: [{
+                            translateY: scrollAnim
+                        }]
+                    },
+                    {
+                        position: 'absolute',
+                        zIndex: 99,
+                        top: statusBarHeight,
+                        backgroundColor: '#ffffff',
+                        opacity: fadeAnim
+                    }
+                ]}
+            >
+                <TextInput
                     style={{
-                        SHADOW: {
-                            shadowColor: '#000000',
-                            shadowOffset: {
-                                width: 0,
-                                height: 3,
-                            },
-                            shadowRadius: 5,
-                            shadowOpacity: 0.7,
-                            elevation: 10,
-                        },
+                        height: 40,
+                        paddingHorizontal: 10,
+                        width
                     }}
-                >
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={(input) => {
-                            setUrl(input);
-                            setUrlDisplay(input);
-                        }}
-                        value={urlDisplay}
-                        placeholder="Enter URL"
-                        onSubmitEditing={() => fetchWebsite()}
-                        autoCorrect={false}
-                        autoCapitalize="none"
-                        onFocus={() => onFocusInput()}
-                        onBlur={() => fetchWebsite()}
-                    />
-                </View>
-            )}
-
+                    onChangeText={(input) => {
+                        setUrl(input);
+                        setUrlDisplay(input);
+                    }}
+                    value={urlDisplay}
+                    placeholder="Enter URL"
+                    onSubmitEditing={() => {
+                        fetchWebsite();
+                    }}
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    onFocus={() => onFocusInput()}
+                />
+            </Animated.View>
             {renderWebView()}
         </SafeAreaView>
     );
 }
-
-const styles = StyleSheet.create({
-    input: {
-        height: 40,
-        paddingHorizontal: 10,
-    },
-});
