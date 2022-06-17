@@ -19,7 +19,6 @@ export default function HomeScreen() {
     const [isScrollUp, setIsScrollUp] = useState(true);
 
     const scrollAnim = useRef(new Animated.Value(0)).current;
-    const scaleAnim = useRef(new Animated.Value(0)).current;
     const fadeAnim = useRef(new Animated.Value(0)).current;
 
     useEffect(
