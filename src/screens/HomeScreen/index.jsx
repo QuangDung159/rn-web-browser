@@ -1,9 +1,8 @@
 /* eslint-disable react/react-in-jsx-scope */
-import Constants from 'expo-constants';
 import { useCallback, useState } from 'react';
 import {
-    StyleSheet, TextInput,
-    View
+    SafeAreaView,
+    StyleSheet, TextInput
 } from 'react-native';
 import WebView from 'react-native-webview';
 
@@ -34,7 +33,14 @@ export default function HomeScreen() {
                 pullToRefreshEnabled
                 onScroll={(syntheticEvent) => {
                     const { contentOffset } = syntheticEvent.nativeEvent;
-                    if (contentOffset.y <= currentScroll || contentOffset.y <= 0) {
+                    // if (Math.abs(contentOffset.y - currentScroll) > 20) {
+                    //     if (contentOffset.y <= currentScroll) {
+                    //         setIsScrollUp(true);
+                    //     } else {
+                    //         setIsScrollUp(false);
+                    //     }
+                    // }
+                    if (contentOffset.y <= currentScroll) {
                         setIsScrollUp(true);
                     } else {
                         setIsScrollUp(false);
@@ -46,7 +52,7 @@ export default function HomeScreen() {
     );
 
     return (
-        <View
+        <SafeAreaView
             style={{
                 flex: 1
             }}
@@ -70,7 +76,7 @@ export default function HomeScreen() {
             )}
 
             {renderWebView()}
-        </View>
+        </SafeAreaView>
     );
 }
 
@@ -79,6 +85,5 @@ const styles = StyleSheet.create({
         height: 40,
         borderBottomWidth: 0.5,
         paddingHorizontal: 10,
-        marginTop: Constants.statusBarHeight
     },
 });
