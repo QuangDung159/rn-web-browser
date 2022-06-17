@@ -33,16 +33,13 @@ export default function HomeScreen() {
                 pullToRefreshEnabled
                 onScroll={(syntheticEvent) => {
                     const { contentOffset } = syntheticEvent.nativeEvent;
-                    // if (Math.abs(contentOffset.y - currentScroll) > 20) {
-                    //     if (contentOffset.y <= currentScroll) {
-                    //         setIsScrollUp(true);
-                    //     } else {
-                    //         setIsScrollUp(false);
-                    //     }
-                    // }
-                    if (contentOffset.y <= currentScroll) {
-                        setIsScrollUp(true);
-                    } else {
+                    const isTriggerToggle = Math.abs(contentOffset.y - currentScroll) > 50;
+
+                    if (contentOffset.y <= currentScroll || contentOffset.y <= 0) {
+                        if (isTriggerToggle) {
+                            setIsScrollUp(true);
+                        }
+                    } else if (isTriggerToggle) {
                         setIsScrollUp(false);
                     }
                     setCurrentScroll(contentOffset.y);
