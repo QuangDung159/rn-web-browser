@@ -18,22 +18,38 @@ export default function HomeScreen() {
     const [currentScroll, setCurrentScroll] = useState(0);
     const [isScrollUp, setIsScrollUp] = useState(true);
 
-    // fadeAnim will be used as the value for opacity. Initial Value: 0
+    const scrollAnim = useRef(new Animated.Value(0)).current;
     const fadeAnim = useRef(new Animated.Value(0)).current;
 
     useEffect(
         () => {
             if (isScrollUp) {
-                fadeOut();
-            } else {
+                scrollDown();
                 fadeIn();
+            } else {
+                scrollUp();
+                fadeOut();
             }
         }, [isScrollUp]
     );
 
+    const scrollUp = () => {
+        Animated.timing(scrollAnim, {
+            toValue: -(40 + statusBarHeight),
+            duration: 100
+        }).start();
+    };
+
+    const scrollDown = () => {
+        Animated.timing(scrollAnim, {
+            toValue: 0,
+            duration: 100
+        }).start();
+    };
+
     const fadeIn = () => {
         Animated.timing(fadeAnim, {
-            toValue: -(40 + statusBarHeight),
+            toValue: 1,
             duration: 100
         }).start();
     };
@@ -70,7 +86,7 @@ export default function HomeScreen() {
                 pullToRefreshEnabled
                 onScroll={(syntheticEvent) => {
                     const { contentOffset } = syntheticEvent.nativeEvent;
-                    const isTriggerToggle = Math.abs(contentOffset.y - currentScroll) > 50;
+                    const isTriggerToggle = Math.abs(contentOffset.y - currentScroll) > 20;
 
                     if (contentOffset.y <= currentScroll || contentOffset.y <= 0) {
                         if (isTriggerToggle) {
@@ -95,13 +111,14 @@ export default function HomeScreen() {
                 style={[
                     {
                         transform: [{
-                            translateY: fadeAnim
+                            translateY: scrollAnim
                         }]
                     },
                     {
                         position: 'absolute',
                         zIndex: 99,
-                        top: statusBarHeight
+                        top: statusBarHeight,
+                        opacity: fadeAnim
                     }
                 ]}
             >
