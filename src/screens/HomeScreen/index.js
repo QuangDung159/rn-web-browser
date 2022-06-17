@@ -4,12 +4,12 @@ import {
     useCallback, useEffect, useRef, useState
 } from 'react';
 import {
-    Animated, SafeAreaView,
-    StyleSheet, TextInput
+    Animated, Dimensions, SafeAreaView, TextInput
 } from 'react-native';
 import WebView from 'react-native-webview';
 
 const { statusBarHeight } = Constants;
+const { width } = Dimensions.get('window');
 
 export default function HomeScreen() {
     const [url, setUrl] = useState('https://google.com');
@@ -50,14 +50,14 @@ export default function HomeScreen() {
     const fadeIn = () => {
         Animated.timing(fadeAnim, {
             toValue: 1,
-            duration: 100
+            duration: 250
         }).start();
     };
 
     const fadeOut = () => {
         Animated.timing(fadeAnim, {
             toValue: 0,
-            duration: 100
+            duration: 50
         }).start();
     };
 
@@ -79,7 +79,7 @@ export default function HomeScreen() {
             <WebView
                 style={[
                     isScrollUp && {
-                        marginTop: statusBarHeight
+                        marginTop: 40
                     }
                 ]}
                 source={{ uri }}
@@ -104,7 +104,8 @@ export default function HomeScreen() {
     return (
         <SafeAreaView
             style={{
-                flex: 1
+                flex: 1,
+                backgroundColor: '#fff'
             }}
         >
             <Animated.View
@@ -118,12 +119,17 @@ export default function HomeScreen() {
                         position: 'absolute',
                         zIndex: 99,
                         top: statusBarHeight,
+                        backgroundColor: '#ffffff',
                         opacity: fadeAnim
                     }
                 ]}
             >
                 <TextInput
-                    style={styles.input}
+                    style={{
+                        height: 40,
+                        paddingHorizontal: 10,
+                        width
+                    }}
                     onChangeText={(input) => {
                         setUrl(input);
                         setUrlDisplay(input);
@@ -142,10 +148,3 @@ export default function HomeScreen() {
         </SafeAreaView>
     );
 }
-
-const styles = StyleSheet.create({
-    input: {
-        height: 40,
-        paddingHorizontal: 10,
-    },
-});
