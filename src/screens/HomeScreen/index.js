@@ -19,6 +19,7 @@ export default function HomeScreen() {
     const [isScrollUp, setIsScrollUp] = useState(true);
 
     const scrollAnim = useRef(new Animated.Value(0)).current;
+    const scaleAnim = useRef(new Animated.Value(0)).current;
     const fadeAnim = useRef(new Animated.Value(0)).current;
 
     useEffect(
@@ -35,15 +36,15 @@ export default function HomeScreen() {
 
     const scrollUp = () => {
         Animated.timing(scrollAnim, {
-            toValue: -(40 + statusBarHeight),
-            duration: 100
+            toValue: -(50),
+            duration: 200
         }).start();
     };
 
     const scrollDown = () => {
         Animated.timing(scrollAnim, {
             toValue: 0,
-            duration: 100
+            duration: 200
         }).start();
     };
 
@@ -57,7 +58,7 @@ export default function HomeScreen() {
     const fadeOut = () => {
         Animated.timing(fadeAnim, {
             toValue: 0,
-            duration: 50
+            duration: 100
         }).start();
     };
 
@@ -76,28 +77,37 @@ export default function HomeScreen() {
 
     const renderWebView = useCallback(
         () => (
-            <WebView
+            <Animated.View
                 style={[
-                    isScrollUp && {
-                        marginTop: 40
+                    {
+                        marginTop: 45,
+                        flex: 1
+                    },
+                    {
+                        transform: [{
+                            translateY: scrollAnim,
+                        }]
                     }
                 ]}
-                source={{ uri }}
-                pullToRefreshEnabled
-                onScroll={(syntheticEvent) => {
-                    const { contentOffset } = syntheticEvent.nativeEvent;
-                    const isTriggerToggle = Math.abs(contentOffset.y - currentScroll) > 20;
+            >
+                <WebView
+                    source={{ uri }}
+                    pullToRefreshEnabled
+                    onScroll={(syntheticEvent) => {
+                        const { contentOffset } = syntheticEvent.nativeEvent;
+                        const isTriggerToggle = Math.abs(contentOffset.y - currentScroll) > 0;
 
-                    if (contentOffset.y <= currentScroll || contentOffset.y <= 0) {
-                        if (isTriggerToggle) {
-                            setIsScrollUp(true);
+                        if (contentOffset.y <= currentScroll || contentOffset.y <= 0) {
+                            if (isTriggerToggle) {
+                                setIsScrollUp(true);
+                            }
+                        } else if (isTriggerToggle) {
+                            setIsScrollUp(false);
                         }
-                    } else if (isTriggerToggle) {
-                        setIsScrollUp(false);
-                    }
-                    setCurrentScroll(contentOffset.y);
-                }}
-            />
+                        setCurrentScroll(contentOffset.y);
+                    }}
+                />
+            </Animated.View>
         ), [uri, currentScroll]
     );
 
@@ -120,7 +130,10 @@ export default function HomeScreen() {
                         zIndex: 99,
                         top: statusBarHeight,
                         backgroundColor: '#ffffff',
-                        opacity: fadeAnim
+                        opacity: fadeAnim,
+                        alignItems: 'center',
+                        width,
+                        paddingBottom: 5
                     }
                 ]}
             >
@@ -128,7 +141,9 @@ export default function HomeScreen() {
                     style={{
                         height: 40,
                         paddingHorizontal: 10,
-                        width
+                        width: width - 10,
+                        backgroundColor: '#EBECEC',
+                        borderRadius: 6,
                     }}
                     onChangeText={(input) => {
                         setUrl(input);
