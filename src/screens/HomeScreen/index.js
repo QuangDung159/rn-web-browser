@@ -136,12 +136,12 @@ export default function HomeScreen() {
                     }}
                     value={urlDisplay}
                     placeholder="Enter URL"
-                    onSubmitEditing={() => {
-                        fetchWebsite();
-                    }}
+                    onSubmitEditing={() => fetchWebsite()}
                     autoCorrect={false}
                     autoCapitalize="none"
                     onFocus={() => onFocusInput()}
+                    onBlur={() => fetchWebsite()}
+                    selectTextOnFocus
                 />
             </Animated.View>
             {renderWebView()}
