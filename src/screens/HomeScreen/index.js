@@ -2,7 +2,7 @@
 import { useCallback, useState } from 'react';
 import {
     SafeAreaView,
-    StyleSheet, TextInput
+    StyleSheet, TextInput, View
 } from 'react-native';
 import WebView from 'react-native-webview';
 
@@ -33,7 +33,7 @@ export default function HomeScreen() {
                 pullToRefreshEnabled
                 onScroll={(syntheticEvent) => {
                     const { contentOffset } = syntheticEvent.nativeEvent;
-                    const isTriggerToggle = Math.abs(contentOffset.y - currentScroll) > 50;
+                    const isTriggerToggle = Math.abs(contentOffset.y - currentScroll) > 20;
 
                     if (contentOffset.y <= currentScroll || contentOffset.y <= 0) {
                         if (isTriggerToggle) {
@@ -55,21 +55,35 @@ export default function HomeScreen() {
             }}
         >
             {isScrollUp && (
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(input) => {
-                        setUrl(input);
-                        setUrlDisplay(input);
+                <View
+                    style={{
+                        SHADOW: {
+                            shadowColor: '#000000',
+                            shadowOffset: {
+                                width: 0,
+                                height: 3,
+                            },
+                            shadowRadius: 5,
+                            shadowOpacity: 0.7,
+                            elevation: 10,
+                        },
                     }}
-                    value={urlDisplay}
-                    placeholder="Enter URL"
-                    onSubmitEditing={() => {
-                        fetchWebsite();
-                    }}
-                    autoCorrect={false}
-                    autoCapitalize="none"
-                    onFocus={() => onFocusInput()}
-                />
+                >
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={(input) => {
+                            setUrl(input);
+                            setUrlDisplay(input);
+                        }}
+                        value={urlDisplay}
+                        placeholder="Enter URL"
+                        onSubmitEditing={() => fetchWebsite()}
+                        autoCorrect={false}
+                        autoCapitalize="none"
+                        onFocus={() => onFocusInput()}
+                        onBlur={() => fetchWebsite()}
+                    />
+                </View>
             )}
 
             {renderWebView()}
