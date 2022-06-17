@@ -80,7 +80,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
     input: {
         height: 40,
-        borderBottomWidth: 0.5,
         paddingHorizontal: 10,
     },
 });

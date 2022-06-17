@@ -8,7 +8,7 @@ import * as Font from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { Image, LogBox } from 'react-native';
-import HomeScreen from './src/screens/HomeScreen';
+import WebViewScreen from './src/screens/WebViewScreen';
 import { SCREEN_NAME, SCREEN_TITLE, THEME } from './src/utils/Constants';
 import Images from './src/utils/Images';
 
@@ -110,7 +110,7 @@ export default function App() {
                             title: SCREEN_TITLE.HOME,
                         }}
                         name={SCREEN_NAME.HOME}
-                        component={HomeScreen}
+                        component={WebViewScreen}
                     />
                 </StackNavigator.Navigator>
             </NavigationContainer>
