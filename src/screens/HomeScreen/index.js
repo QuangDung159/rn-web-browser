@@ -1,10 +1,15 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { useCallback, useState } from 'react';
+import Constants from 'expo-constants';
 import {
-    SafeAreaView,
+    useCallback, useEffect, useRef, useState
+} from 'react';
+import {
+    Animated, SafeAreaView,
     StyleSheet, TextInput
 } from 'react-native';
 import WebView from 'react-native-webview';
+
+const { statusBarHeight } = Constants;
 
 export default function HomeScreen() {
     const [url, setUrl] = useState('https://google.com');
@@ -12,6 +17,33 @@ export default function HomeScreen() {
     const [urlDisplay, setUrlDisplay] = useState('https://google.com');
     const [currentScroll, setCurrentScroll] = useState(0);
     const [isScrollUp, setIsScrollUp] = useState(true);
+
+    // fadeAnim will be used as the value for opacity. Initial Value: 0
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(
+        () => {
+            if (isScrollUp) {
+                fadeOut();
+            } else {
+                fadeIn();
+            }
+        }, [isScrollUp]
+    );
+
+    const fadeIn = () => {
+        Animated.timing(fadeAnim, {
+            toValue: -(40 + statusBarHeight),
+            duration: 100
+        }).start();
+    };
+
+    const fadeOut = () => {
+        Animated.timing(fadeAnim, {
+            toValue: 0,
+            duration: 100
+        }).start();
+    };
 
     const fetchWebsite = () => {
         const validUrl = `https://${url}`;
@@ -29,6 +61,11 @@ export default function HomeScreen() {
     const renderWebView = useCallback(
         () => (
             <WebView
+                style={[
+                    isScrollUp && {
+                        marginTop: statusBarHeight
+                    }
+                ]}
                 source={{ uri }}
                 pullToRefreshEnabled
                 onScroll={(syntheticEvent) => {
@@ -54,7 +91,20 @@ export default function HomeScreen() {
                 flex: 1
             }}
         >
-            {isScrollUp && (
+            <Animated.View
+                style={[
+                    {
+                        transform: [{
+                            translateY: fadeAnim
+                        }]
+                    },
+                    {
+                        position: 'absolute',
+                        zIndex: 99,
+                        top: statusBarHeight
+                    }
+                ]}
+            >
                 <TextInput
                     style={styles.input}
                     onChangeText={(input) => {
@@ -70,8 +120,7 @@ export default function HomeScreen() {
                     autoCapitalize="none"
                     onFocus={() => onFocusInput()}
                 />
-            )}
-
+            </Animated.View>
             {renderWebView()}
         </SafeAreaView>
     );
