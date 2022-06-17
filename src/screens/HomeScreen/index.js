@@ -9,7 +9,9 @@ import {
 import WebView from 'react-native-webview';
 
 const { statusBarHeight } = Constants;
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
+
+const viewHeight = height - 70;
 
 export default function HomeScreen() {
     const [url, setUrl] = useState('https://google.com');
@@ -36,7 +38,7 @@ export default function HomeScreen() {
     const scrollUp = () => {
         Animated.timing(scrollAnim, {
             toValue: -(50),
-            duration: 200
+            duration: 50
         }).start();
     };
 
@@ -57,7 +59,7 @@ export default function HomeScreen() {
     const fadeOut = () => {
         Animated.timing(fadeAnim, {
             toValue: 0,
-            duration: 100
+            duration: 20
         }).start();
     };
 
@@ -80,7 +82,7 @@ export default function HomeScreen() {
                 style={[
                     {
                         marginTop: 45,
-                        flex: 1
+                        height: !isScrollUp ? viewHeight : viewHeight - 50
                     },
                     {
                         transform: [{
