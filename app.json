@@ -24,7 +24,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.quangdunglu159.rnwebbrowser"
+      "package": "com.quangdunglu159.rnwebbrowser",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
